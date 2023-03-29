@@ -507,6 +507,26 @@ function removeSearchControl(control){
 	
 };
 
+var legend = L.control({position: 'bottomleft'});
+
+legend.onAdd = function (map) {
+
+var div = L.DomUtil.create('div', 'legend'),
+grades = ["Car", "ball"],
+labels = ["assets/height.png","assets/type.png"];
+
+    // loop through our density intervals and generate a label with a colored square for each interval
+    for (var i = 0; i < grades.length; i++) {
+      div.innerHTML +=
+          grades[i] + (" <img src="+ labels[i] +" height='50' width='50'>") +'<br>';
+  }
+
+  return div;
+ };
+
+
+
+
 var legendControl = L.control.custom({
   position: 'bottomleft',
   content : '<button type="button" class="treeIconButton" disabled = "true" id = "treeheightbtn">Tree Height'+
@@ -611,8 +631,12 @@ function createLayerControl() {
 
 
 legendControl.addTo(map);
+legend.addTo(map);
+
 }
 
 function destroyLayerControl() {
 legendControl.remove();
+legend.remove();
 }
+

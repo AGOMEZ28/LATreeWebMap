@@ -124,4 +124,8 @@ background-color: orange;
   cursor: pointer;
 }
 
-    
+.legend
+{
+background-color: rgb(255, 255, 255);
+padding: 1%;
+}
