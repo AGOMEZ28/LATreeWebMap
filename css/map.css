@@ -29,6 +29,8 @@ body {
 
 
 
+
+
 .cluster {
   background: #2d84c8;
   border-radius: 50%;
@@ -191,6 +193,7 @@ body {
     width: 25px;
     position: absolute;
     right: 10;
+	top: 7;
 }
 
 
@@ -200,6 +203,8 @@ body {
     width: 25px;
     position: absolute;
     left: 10;
+	top: 7;
+	cursor: pointer;
 }
 
 
@@ -222,7 +227,21 @@ body {
 }
 .modal {
 	align-items: center;
-	display: flex;
+	display: none;
+	justify-content: center; 
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	transition: all 0.4s;
+	visibility: hidden;
+	opacity: 0.9;
+}
+
+#popup-box {
+	align-items: center;
+	display: none;
 	justify-content: center; 
 	position: absolute;
 	top: 0;

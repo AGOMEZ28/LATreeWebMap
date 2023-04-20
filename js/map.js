@@ -1,5 +1,6 @@
-      $('#info').click(function(){ 
-	  console.log("info");
+      $('#help').click(function(){ 
+	  $('#popup-box').prop("dispay","block");
+	  console.log("clicked");
 	  })
      
 
@@ -44,74 +45,76 @@
           fillOpacity: 0.6,
           stroke:false
         });
-      parkBoundaries.addTo(map);
       
       parkBoundaries.bindPopup(function (layer) {
 
         return L.Util.template("<b>{Name}</b><br>{Address}</br>", layer.feature.properties);
 
       });
+	  
+     
+	  
 
-      var parkLabels = L.esri
-      .featureLayer({
-        url:        "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/Los_Angeles_Recreation_and_Parks_Boundaries/FeatureServer/0",
-        fillColor: '#2ca25f',
-        color: '#2ca25f',
-        stroke:false
-      }).addTo(map);
+      // var parkLabels = L.esri
+      // .featureLayer({
+        // url:        "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/Los_Angeles_Recreation_and_Parks_Boundaries/FeatureServer/0",
+        // fillColor: '#2ca25f',
+        // color: '#2ca25f',
+        // stroke:false
+      // }).addTo(map);
 
-      const labels = {};
+      // const labels = {};
 
-      parkLabels.on("createfeature", function (e) {
-        const id = e.feature.id;
-        const feature = parkLabels.getFeature(id);
-        const center = feature.getBounds().getCenter();
-        const label = L.marker(center, {
-          icon: L.divIcon({
-            iconSize: null,
-            className: "label",
-            html: "<div>" + e.feature.properties.Name + "</div>"
-          })
-        });
-        labels[id] = label;
-      });
-      var show_label_zoom = 15; // zoom level threshold for showing/hiding labels
-      function show_hide_labels() {
-        var cur_zoom = map.getZoom();
-        if(cur_zoom < show_label_zoom && map.hasLayer(parkLabels)) {       
-            map.removeLayer(parkLabels);            
-        } else if(!map.hasLayer(parkLabels) && cur_zoom >= show_label_zoom) {            
-          map.addLayer(parkLabels);                 
-        }
-    }
-    map.on('zoomend', show_hide_labels);
-    show_hide_labels();
+      // parkLabels.on("createfeature", function (e) {
+        // const id = e.feature.id;
+        // const feature = parkLabels.getFeature(id);
+        // const center = feature.getBounds().getCenter();
+        // const label = L.marker(center, {
+          // icon: L.divIcon({
+            // iconSize: null,
+            // className: "label",
+            // html: "<div>" + e.feature.properties.Name + "</div>"
+          // })
+        // });
+        // labels[id] = label;
+      // });
+      // var show_label_zoom = 15; // zoom level threshold for showing/hiding labels
+      // function show_hide_labels() {
+        // var cur_zoom = map.getZoom();
+        // if(cur_zoom < show_label_zoom && map.hasLayer(parkLabels)) {       
+            // map.removeLayer(parkLabels);            
+        // } else if(!map.hasLayer(parkLabels) && cur_zoom >= show_label_zoom) {            
+          // map.addLayer(parkLabels);                 
+        // }
+    // }
+    // map.on('zoomend', show_hide_labels);
+    // show_hide_labels();
 
-    parkLabels.on("addfeature", function (e) {
-        const label = labels[e.feature.id];
-        if (label) {
-          label.addTo(map);
-        }
-      });
+    // parkLabels.on("addfeature", function (e) {
+        // const label = labels[e.feature.id];
+        // if (label) {
+          // label.addTo(map);
+        // }
+      // });
 
-      parkLabels.on("removefeature", function (e) {
-        const label = labels[e.feature.id];
-        if (label) {
-          map.removeLayer(label);
-        }
-      });
+      // parkLabels.on("removefeature", function (e) {
+        // const label = labels[e.feature.id];
+        // if (label) {
+          // map.removeLayer(label);
+        // }
+      // });
 
       
             var streetTrees = L.esri.Cluster
         .featureLayer({
-          url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/LAStreetTrees/FeatureServer/0",
+          url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/FilteredStreetTrees/FeatureServer/0",
 		  spiderfyOnMaxZoom: false,
 		  removeOutsideVisibleBounds: true,
         disableClusteringAtZoom: 18,
                 pointToLayer: function (feature, latlng) {
           var myStyle = {
-    color: 'red',
-        fillColor: '#f03',
+    color: '#0CAE5B',
+        fillColor: '#0CAE5B',
         fillOpacity: 0.5,
         radius: 5
     };
@@ -122,6 +125,12 @@
 
         });
       streetTrees.addTo(map);
+	  
+	  	streetTrees.bindPopup(function (layer) {
+
+        return L.Util.template("<b>{COMMON_N}</b><br>Botanical Name: {BOTANICAL}<br>Street: {STREET}<br>", layer.feature.properties);
+
+      });
 	  
 	    const parkTrees = L.esri.Cluster
         .featureLayer({
@@ -153,9 +162,9 @@
         // value of the "magnitude" field to set the symbol
         pointToLayer: function (feature, latlng) {
           var myStyle = {
-    color: '#40EE95',
-        fillColor: '#40EE95',
-        fillOpacity: 0.9,
+    color: '#0CAE5B',
+        fillColor: '#0CAE5B',
+        fillOpacity: 0.85,
         radius: 5
     };
           return new L.CircleMarker(latlng,myStyle);
@@ -171,10 +180,9 @@
         });
       parkTrees.addTo(map);
 	  
-	  
 	     parkTrees.bindPopup(function (layer) {
 
-        return L.Util.template("<b>Common Name: {X_COMMONNA}</b><br>Botanical Name: {Botanical_}<br>Family: {FAMILY}<br>Park: {FACILITY}<br>", layer.feature.properties);
+        return L.Util.template("<b>{X_COMMONNA}</b><br>Botanical Name: {Botanical_}<br>Family: {FAMILY}<br>Park: {FACILITY}<br>", layer.feature.properties);
 
       });
 
@@ -220,6 +228,8 @@
           return feature.properties.COMMON_N;
         }
       });
+	  
+
 
       var streetTreeSearchLayer2 = L.esri.Geocoding.featureLayerProvider({
         url:
@@ -278,8 +288,11 @@ var RadioControl = L.Control.extend({
 
 function removeAllLayers() {
 	try {
-		map.removeLayer(parkTrees);
-		map.removeLayer(streetTrees);
+		parkTrees.setWhere("where 1 = 0").addTo(map);
+		streetTrees.setWhere("where 1 = 0").addTo(map);
+
+		//map.removeLayer(parkTrees);
+		//map.removeLayer(streetTrees);
 	}
 	catch {
 		
@@ -287,10 +300,10 @@ function removeAllLayers() {
 
 }
 
-var x = addSearchControl("Search Park",parkSearchLayer,parkTrees,"FACILITY = ");
-var y = addSearchControl("Search Park Tree",treeSearchLayer,parkTrees,"X_COMMONNA = ");
-var z = addSearchControl("Search Street Tree",streetTreeSearchLayer,streetTrees,"COMMON_N = ");
-var v = addSearchControl("Search Street",streetTreeSearchLayer2,streetTrees,"STREET = ");
+var x = addSearchControl("Search Park",parkSearchLayer,parkTrees,"FACILITY = ",false);
+var y = addSearchControl("Search Park Tree",treeSearchLayer,parkTrees,"X_COMMONNA = ",false);
+var z = addSearchControl("Search Street Tree",streetTreeSearchLayer,streetTrees,"COMMON_N = ",true);
+var v = addSearchControl("Search Street",streetTreeSearchLayer2,streetTrees,"STREET = ",true);
 function hideParkButtons() {
 	$('button.btn.btn-primary').remove("#park");
 	$('button.btn.btn-primary').remove("#tree");
@@ -433,6 +446,8 @@ var treeBool = false;
 
     };
 
+
+
 function createTopLevelButtons() {
 var RadioControl = L.Control.extend({
         options: {
@@ -463,7 +478,15 @@ var RadioControl = L.Control.extend({
                   destroyLayerControl();
                   map.setView([34.02, -118.205], 10);
 					removeAllLayers();
-					parkTrees.addTo(map);
+					$("#searchTitle").text("Los Angeles Tree Web Map");
+
+					var layerControlElement = document.getElementsByClassName('leaflet-control-layers')[0];
+					layerControlElement.getElementsByTagName('input')[2].click();
+					//parkTrees.addTo(map);
+					//parkTrees.setWhere("1 = 0");
+					//parkTrees.addTo(map);
+					console.log(parkTrees.getWhere());
+					parkBoundaries.addTo(map);
 					$(tap).prop("disabled",true);
 					$(tas).prop("disabled",false);
 					showParkButtons();
@@ -473,8 +496,13 @@ var RadioControl = L.Control.extend({
                 else if ($(this).attr('id') == 'tas'){
                   destroyLayerControl();
                   map.setView([34.02, -118.205], 10);
+					map.removeLayer(parkBoundaries);
+					$("#searchTitle").text("Los Angeles Tree Web Map");
+
 					removeAllLayers();
-					streetTrees.addTo(map);
+					var layerControlElement = document.getElementsByClassName('leaflet-control-layers')[0];
+					layerControlElement.getElementsByTagName('input')[0].click();
+					//streetTrees.addTo(map);
 					$(tap).prop("disabled",false);
 					$(tas).prop("disabled",true);
 					showStreetButtons();
@@ -491,19 +519,29 @@ var RadioControl = L.Control.extend({
 	createTopLevelButtons();
 	
 
+function capitalizeFirstLetter(string) {
+	var x = string.toLowerCase();
+    return x.charAt(0).toUpperCase() + x.slice(1).toUpperCase();
+}
 
-
-function addSearchControl(placeholder,provider,source,where) {
+function addSearchControl(placeholder,provider,source,where,isStreetData) {
 	 const searchControl = L.esri.Geocoding.geosearch({
 		placeholder: placeholder,
 		expanded: true,
-        providers: [provider]
+        providers: [provider],
+		useMapBounds: false,
+		title: placeholder
       });
 	  
 	    searchControl.on("results", (data) => {
 				if (data.text !== "") {
+					console.log(data.text);
+					$("#searchTitle").text(data.text);
 			   source.setWhere(where + "'" + data.text + "'");
-         createLayerControl();
+		if (isStreetData == true) { createLayerControl(1)}
+		else {
+         createLayerControl(2);
+		}
 				}
       });
 	  return searchControl;
@@ -520,7 +558,8 @@ legend.onAdd = function (map) {
 
 //var div = L.DomUtil.create('div', 'legend');
 var div = L.DomUtil.create('div', 'legend');
-div.innerHTML += "Tree " + (" <img src= assets/greencircle.png" + " height = 15"  + " width = 15" + " /><br>");
+
+div.innerHTML += "Trees " + (" <img src= assets/greencircle.png" + " height = 15"  + " width = 15" + " /><br>");
 div.setAttribute("id","test123");
   return div;
  };
@@ -572,13 +611,57 @@ var legendControl = L.control.custom({
   }
 });
 
+var legendControl2 = L.control.custom({
+  position: 'bottomleft',
+  content : '<button type="button" class="btn btn-primary" disabled = "true" id = "simple">Simple'+
+            '    <img src="assets/simple.png" alt="Simple Icon" width = "25" height = "25" id = "simple" />'+
+            '</button>'+
+           '<button type="button" class="btn btn-primary" id = "treeformbtn">Tree Form'+
+            '    <img src="assets/treeform.png" alt="Tree Icon" width = "25" height = "25" id = "treeformbtn" />'+
+            '</button>'+
+           '<button type="button" class="btn btn-primary" id = "treetypebtn">Tree Type'+
+            '    <img src="assets/type.png" alt="Tree Icon" width = "25" height = "25" id = "treetypebtn" />'+
+            '</button>',
+
+           
+  classes : 'btn-container',
+  style   :
+  {
+
+  },
+  datas   :
+  {
+      'foo': 'bar',
+  },
+  events:
+  {
+      click: function(data)
+      {
+    onSymbologyClicked(data);
+      },
+      dblclick: function(data)
+      {
+          console.log('wrapper div element dblclicked');
+          console.log(data);
+      },
+      contextmenu: function(data)
+      {
+          console.log('wrapper div element contextmenu');
+          console.log(data);
+      },
+  }
+});
+
+
 
 function updateLegend(id) {
 	document.getElementById("test123").innerHTML = '';
 
 	switch(id) {
 		case "simple": {
-		document.getElementById("test123").innerHTML += "Tree " + (" <img src= assets/greencircle.png" + " height = 20"  + " width = 20" + " /><br>");
+		var x = 0;
+
+		document.getElementById("test123").innerHTML += "Trees " + (" <img src= assets/greencircle.png" + " height = 20"  + " width = 20" + " /><br>");
 		break;
 		}
 		
@@ -621,21 +704,47 @@ function updateLegend(id) {
 function updatePopup(popuplayer,id) {
 	
 		     popuplayer.bindPopup(function (layer) {
-		switch(id) {
-			case "simple": {
-				return L.Util.template("<b>Common Name: {X_COMMONNA}</b><br>Botanical Name: {Botanical_}<br>Family: {FAMILY}<br>Park: {FACILITY}<br>", layer.feature.properties);
-			}
-			case "treeheightbtn": {
-				return L.Util.template("<b>Common Name: {X_COMMONNA}</b><br>Botanical Name: {Botanical_}<br>Family: {FAMILY}<br>Tree Height: {TREE_HEIGH}<br>Park: {FACILITY}<br>", layer.feature.properties);
-			}
-			case "treetypebtn": {
-				return L.Util.template("<b>Common Name: {X_COMMONNA}</b><br>Botanical Name: {Botanical_}<br>Family: {FAMILY}<br>Tree Type: {TREETYPE}<br>Park: {FACILITY}<br>", layer.feature.properties);
-			}
-			case "treeformbtn": {
-				return L.Util.template("<b>Common Name: {X_COMMONNA}</b><br>Botanical Name: {Botanical_}<br>Family: {FAMILY}<br>Tree Form: {TREEFORM}<br>Park: {FACILITY}<br>", layer.feature.properties);
+		if (popuplayer == parkTrees) {
+			switch(id) {
+				case "simple": {
+					return L.Util.template("<b>{X_COMMONNA}</b><br>Botanical Name: {Botanical_}<br>Family: {FAMILY}<br>Park: {FACILITY}<br>", layer.feature.properties);
+				}
+				case "treeheightbtn": {
+					return L.Util.template("<b>{X_COMMONNA}</b><br>Botanical Name: {Botanical_}<br>Family: {FAMILY}<br>Tree Height: {TREE_HEIGH}<br>Park: {FACILITY}<br>", layer.feature.properties);
+				}
+				case "treetypebtn": {
+					return L.Util.template("<b>{X_COMMONNA}</b><br>Botanical Name: {Botanical_}<br>Family: {FAMILY}<br>Tree Type: {TREETYPE}<br>Park: {FACILITY}<br>", layer.feature.properties);
+				}
+				case "treeformbtn": {
+					return L.Util.template("<b>{X_COMMONNA}</b><br>Botanical Name: {Botanical_}<br>Family: {FAMILY}<br>Tree Form: {TREEFORM}<br>Park: {FACILITY}<br>", layer.feature.properties);
+				}
 			}
 		}
+		else if (popuplayer == streetTrees) {
+			switch(id) {
+				case "simple": {
+					return L.Util.template("<b>{X_COMMONNA}</b><br>Botanical Name: {Botanical_}<br>Family: {FAMILY}<br>Street: {STREET}<br>", layer.feature.properties);
+				}
+				case "treedesc": {
+					return L.Util.template("<b>{X_COMMONNA}</b><br>Botanical Name: {Botanical_}<br>Family: {FAMILY}<br>Tree Height: {TREE_HEIGH}<br>Street: {STREET}<br>", layer.feature.properties);
+				}
+				case "treetypebtn": {
+					return L.Util.template("<b>{X_COMMONNA}</b><br>Botanical Name: {Botanical_}<br>Family: {FAMILY}<br>Tree Type: {TREETYPE}<br>Street: {STREET}<br>", layer.feature.properties);
+				}
+				case "treeformbtn": {
+					return L.Util.template("<b>{X_COMMONNA}</b><br>Botanical Name: {Botanical_}<br>Family: {FAMILY}<br>Tree Form: {TREEFORM}<br>Street: {STREET}<br>", layer.feature.properties);
+				}
+			}			
+		}
       });
+}
+
+function setStyle(feat) {
+			feat.eachFeature(function (layer) {  
+		layer.setStyle({fillColor :'#0CAE5B', color: '#0CAE5B', radius: 5}) 
+    
+  });
+	
 }
 
 function resymbolize(id) {
@@ -644,21 +753,23 @@ switch(id) {
 	
 	 case "simple": {
 		updatePopup(parkTrees,"simple");
+		updatePopup(streetTrees,"simple");
+
 		updateLegend("simple");
-		parkTrees.eachFeature(function (layer) {  
-		layer.setStyle({fillColor :'#40EE95', color: '40EE95', radius: 5}) 
-    
-  });
+		setStyle(parkTrees);
+		setStyle(streetTrees);
   break;
   }
   
   case "treeheightbtn": {
 		updatePopup(parkTrees,"treeheightbtn");
+
 	  	updateLegend("treeheightbtn");
 		parkTrees.eachFeature(function (layer) {
-		layer.setStyle({    color: '#40EE95',
-        fillColor: '#40EE95',});
+		layer.setStyle({    color: '#0CAE5B',
+        fillColor: '#0CAE5B',});
 		if(layer.feature.properties.TREE_HEIGH == '10-20 ft. Small') {    
+			
 			layer.setStyle({radius : 4});
 		}
 		else if (layer.feature.properties.TREE_HEIGH == '20-30 ft. Small') {
@@ -681,10 +792,14 @@ switch(id) {
 		
 		
 	});
+	
+
   break;
   }
       case "treetypebtn": {
 		updatePopup(parkTrees,"treetypebtn");
+		updatePopup(streetTrees,"treetypebtn");
+
 		updateLegend("treetypebtn");
 		parkTrees.eachFeature(function (layer) {  
 		if(layer.feature.properties.TREETYPE == 'Palm') {    
@@ -701,13 +816,46 @@ switch(id) {
 		}
 
   });
+  		streetTrees.eachFeature(function (layer) {  
+		if(layer.feature.properties.TREETYPE == 'Palm') {    
+			layer.setStyle({radius: 5, fillColor :'#A67B51', color: '#A67B51'}) 
+		}
+		else if(layer.feature.properties.TREETYPE == 'Deciduous') {    
+			layer.setStyle({radius: 5, fillColor :'#f0a900', color: '#f0a900'}) 
+		}
+		else if(layer.feature.properties.TREETYPE == 'Evergreen') {    
+			layer.setStyle({radius: 5, fillColor :'#0CAE5B', color: '#0CAE5B'}) 
+		}
+		else {    
+			layer.setStyle({radius : 5, fillColor: "#9DBBAC", color: "#9DBBAC" });
+		}
+
+  });
+  
   break;
   }
   
       case "treeformbtn": {
 		updatePopup(parkTrees,"treeformbtn");
+		updatePopup(streetTrees,"treeformbtn");
+
 		updateLegend("treeformbtn");
 		parkTrees.eachFeature(function (layer) {  
+		if(layer.feature.properties.TREEFORM == 'Decurrent') {    
+			layer.setStyle({radius: 5, fillColor :'#A67B51', color: '#A67B51'}) 
+		}
+		else if(layer.feature.properties.TREEFORM == 'Excurrent') {    
+			layer.setStyle({radius: 5, fillColor :'#f0a900', color: '#f0a900'}) 
+		}
+		else if(layer.feature.properties.TREEFORM == 'Feather') {    
+			layer.setStyle({radius: 5, fillColor :'#0CAE5B', color: '#0CAE5B'}) 
+		}
+		else {    
+			layer.setStyle({radius : 5, fillColor: "#9DBBAC", color: "#9DBBAC" });
+		}
+
+  });
+		streetTrees.eachFeature(function (layer) {  
 		if(layer.feature.properties.TREEFORM == 'Decurrent') {    
 			layer.setStyle({radius: 5, fillColor :'#A67B51', color: '#A67B51'}) 
 		}
@@ -728,7 +876,7 @@ switch(id) {
   default: {
     console.log(id);
     parkTrees.eachFeature(function (layer) {
-      layer.setStyle({color: 'red',
+      layer.setStyle({color: '#0CAE5B',
   fillColor: '#f03',
   fillOpacity: 0.5,
       radius: 5, })
@@ -782,15 +930,23 @@ else if (data.srcElement.id == "treeformbtn") {
 }
 }
 
-function createLayerControl() {
+function createLayerControl(id) {
 
 legend.addTo(map);
-legendControl.addTo(map);
+if (id == 1) {
+	legendControl2.addTo(map);
+	
+} 
+else if (id == 2) {
+	legendControl.addTo(map);
+	
+}
 
 }
 
-function destroyLayerControl() {
+function destroyLayerControl(id) {
 legendControl.remove();
+legendControl2.remove();
 legend.remove();
 }
 
