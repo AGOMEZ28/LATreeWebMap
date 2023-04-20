@@ -1,5 +1,12 @@
-      const map = L.map("map", {
+      $('#info').click(function(){ 
+	  console.log("info");
+	  })
+     
+
+
+	 const map = L.map("map", {
         minZoom: 2,
+		attributionControl: false,
 		maxZoom: 20
       })
 
@@ -13,8 +20,8 @@
 
         Navigation: L.esri.Vector.vectorBasemapLayer("ArcGIS:Navigation", { apiKey: apiKey }),
         Topographic: L.esri.Vector.vectorBasemapLayer("ArcGIS:Topographic", { apiKey: apiKey }),
-        "Light Gray": L.esri.Vector.vectorBasemapLayer("ArcGIS:LightGray", { apiKey: apiKey }),
-        "Dark gray": L.esri.Vector.vectorBasemapLayer("ArcGIS:DarkGray", { apiKey: apiKey }).addTo(map),
+        "Light Gray": L.esri.Vector.vectorBasemapLayer("ArcGIS:LightGray", { apiKey: apiKey }).addTo(map),
+        "Dark gray": L.esri.Vector.vectorBasemapLayer("ArcGIS:DarkGray", { apiKey: apiKey }),
         //"Streets Relief": L.esri.Vector.vectorBasemapLayer("ArcGIS:StreetsRelief", { apiKey: apiKey }),
         Imagery: L.esri.Vector.vectorBasemapLayer("ArcGIS:Imagery", { apiKey: apiKey }),
         //ChartedTerritory: L.esri.Vector.vectorBasemapLayer("ArcGIS:ChartedTerritory", { apiKey: apiKey }),
@@ -26,7 +33,7 @@
       };
 
 
-      L.control.layers(basemapLayers, null, { collapsed: false }).addTo(map);
+      L.control.layers(basemapLayers, null, { collapsed: false, position: 'topright'}).addTo(map);
 
       
                   var parkBoundaries = L.esri
@@ -34,7 +41,7 @@
           url:        "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/Los_Angeles_Recreation_and_Parks_Boundaries/FeatureServer/0",
           fillColor: '#2ca25f',
           color: '#2ca25f',
-          fillOpacity: 5,
+          fillOpacity: 0.6,
           stroke:false
         });
       parkBoundaries.addTo(map);
@@ -100,7 +107,7 @@
           url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/LAStreetTrees/FeatureServer/0",
 		  spiderfyOnMaxZoom: false,
 		  removeOutsideVisibleBounds: true,
-        disableClusteringAtZoom: 20,
+        disableClusteringAtZoom: 18,
                 pointToLayer: function (feature, latlng) {
           var myStyle = {
     color: 'red',
@@ -121,7 +128,7 @@
           url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/Trees_(Recreation_and_Parks_Department)/FeatureServer/0",
 		  spiderfyOnMaxZoom: false,
 		  removeOutsideVisibleBounds: true,
-        disableClusteringAtZoom: 20,
+        disableClusteringAtZoom: 18,
 		
 /* 		 iconCreateFunction: function (cluster) {
           // get the number of items in the cluster
@@ -146,9 +153,9 @@
         // value of the "magnitude" field to set the symbol
         pointToLayer: function (feature, latlng) {
           var myStyle = {
-    color: 'red',
-        fillColor: '#f03',
-        fillOpacity: 0.5,
+    color: '#40EE95',
+        fillColor: '#40EE95',
+        fillOpacity: 0.9,
         radius: 5
     };
           return new L.CircleMarker(latlng,myStyle);
@@ -167,7 +174,7 @@
 	  
 	     parkTrees.bindPopup(function (layer) {
 
-        return L.Util.template("<b>Common Name: {X_COMMONNA}</b><br>Botanical Name: {Botanical_}<br>Family: {FAMILY}</br>Park: {FACILITY}<br>", layer.feature.properties);
+        return L.Util.template("<b>Common Name: {X_COMMONNA}</b><br>Botanical Name: {Botanical_}<br>Family: {FAMILY}<br>Park: {FACILITY}<br>", layer.feature.properties);
 
       });
 
@@ -285,8 +292,8 @@ var y = addSearchControl("Search Park Tree",treeSearchLayer,parkTrees,"X_COMMONN
 var z = addSearchControl("Search Street Tree",streetTreeSearchLayer,streetTrees,"COMMON_N = ");
 var v = addSearchControl("Search Street",streetTreeSearchLayer2,streetTrees,"STREET = ");
 function hideParkButtons() {
-	$(".radio").remove("#park");
-	$(".radio").remove("#tree");
+	$('button.btn.btn-primary').remove("#park");
+	$('button.btn.btn-primary').remove("#tree");
 	try {
 		removeSearchControl(x);
 		removeSearchControl(y);
@@ -297,13 +304,13 @@ function hideParkButtons() {
 }
 
 function showStreetButtons() {
-    $(container).append('<button class="radio" id="street" title="Street Filter">Filter by Street</button>');
-    $(container).append('<button class="radio" id="streettree" title="Street Tree Filter">Filter by Tree</button>');
+    $(container).append('<button type="button" class="btn btn-primary"  id="street" title="Street Filter">Filter by Street</button>');
+    $(container).append('<button type="button" class="btn btn-primary"  id="streettree" title="Street Tree Filter">Filter by Tree</button>');
 }
 
 function hideStreetButtons() {
-	$(".radio").remove("#street");
-	$(".radio").remove("#streettree");	
+	$('button.btn.btn-primary').remove("#street");
+	$('button.btn.btn-primary').remove("#streettree");	
 		try {
 		removeSearchControl(v);
 		removeSearchControl(z);
@@ -314,8 +321,8 @@ function hideStreetButtons() {
 }
 
 function showParkButtons() {
-    $(container).append('<button class="radio" id="park" title="Park Filter">Filter by Park</button>');
-    $(container).append('<button class="radio" id="tree" title="Park Tree Filter">Filter by Tree</button>');	
+    $(container).append('<button type="button" class="btn btn-primary" id="park" title="Park Filter">Filter by Park</button>');
+    $(container).append('<button type="button" class="btn btn-primary" id="tree" title="Park Tree Filter">Filter by Tree</button>');	
 }
 
 
@@ -326,7 +333,7 @@ var treeBool = false;
 
 
     map.addControl(new RadioControl());
-      $('.radio').click(function(){
+      $('button.btn.btn-primary').click(function(){
                 if ($(this).attr('id') == 'street'){
 					parkBool = true;
 					treeBool = false;
@@ -379,7 +386,7 @@ var treeBool = false;
 
 
     map.addControl(new RadioControl());
-      $('.radio').click(function(){
+      $('button.btn.btn-primary').click(function(){
                 if ($(this).attr('id') == 'park'){
 					parkBool = true;
 					treeBool = false;
@@ -440,8 +447,8 @@ var RadioControl = L.Control.extend({
             var container = L.DomUtil.create('div', 'radio-buttons-container');
 
             //create range input element (slider)
-            $(container).append('<button class="radio" id="tap" title="Park Filter">Find Trees at Parks</button>');
-            $(container).append('<button class="radio" id="tas" title="Street Filter">Find Trees at Streets</button>');
+            $(container).append('<button type="button" class="btn btn-primary" id="tap" title="Park Filter">Find Trees at Parks</button>');
+            $(container).append('<button type="button" class="btn btn-primary" id="tas" title="Street Filter">Find Trees at Streets</button>');
             //kill any mouse event listeners on the map
             $(container).on('mousedown dblclick', function(e){
                 L.DomEvent.stopPropagation(e);
@@ -451,7 +458,7 @@ var RadioControl = L.Control.extend({
         }
     })
     map.addControl(new RadioControl());
-      $('.radio').click(function(){
+      $('button.btn.btn-primary').click(function(){
                 if ($(this).attr('id') == 'tap'){
                   destroyLayerControl();
                   map.setView([34.02, -118.205], 10);
@@ -507,20 +514,14 @@ function removeSearchControl(control){
 	
 };
 
-var legend = L.control({position: 'bottomleft'});
+var legend = L.control({position: 'bottomright'});
 
 legend.onAdd = function (map) {
 
-var div = L.DomUtil.create('div', 'legend'),
-grades = ["Car", "ball"],
-labels = ["assets/height.png","assets/type.png"];
-
-    // loop through our density intervals and generate a label with a colored square for each interval
-    for (var i = 0; i < grades.length; i++) {
-      div.innerHTML +=
-          grades[i] + (" <img src="+ labels[i] +" height='50' width='50'>") +'<br>';
-  }
-
+//var div = L.DomUtil.create('div', 'legend');
+var div = L.DomUtil.create('div', 'legend');
+div.innerHTML += "Tree " + (" <img src= assets/greencircle.png" + " height = 15"  + " width = 15" + " /><br>");
+div.setAttribute("id","test123");
   return div;
  };
 
@@ -529,19 +530,24 @@ labels = ["assets/height.png","assets/type.png"];
 
 var legendControl = L.control.custom({
   position: 'bottomleft',
-  content : '<button type="button" class="treeIconButton" disabled = "true" id = "treeheightbtn">Tree Height'+
-            '    <img src="assets/height.png" alt="Tree Icon" width = "25" height = "25">'+
+  content : '<button type="button" class="btn btn-primary" disabled = "true" id = "simple">Simple'+
+            '    <img src="assets/simple.png" alt="Simple Icon" width = "25" height = "25" id = "simple" />'+
             '</button>'+
-           '<button type="button" class="treeIconButton" id = "treetypebtn">Tree Type'+
-            '    <img src="assets/type.png" alt="Tree Icon" width = "25" height = "25">'+
+			'<button type="button" class="btn btn-primary" id = "treeheightbtn">Tree Height'+
+            '    <img src="assets/height.png" alt="Tree Icon" width = "25" height = "25" id = "treeheightbtn" />'+
+            '</button>'+
+           '<button type="button" class="btn btn-primary" id = "treeformbtn">Tree Form'+
+            '    <img src="assets/treeform.png" alt="Tree Icon" width = "25" height = "25" id = "treeformbtn" />'+
+            '</button>'+
+           '<button type="button" class="btn btn-primary" id = "treetypebtn">Tree Type'+
+            '    <img src="assets/type.png" alt="Tree Icon" width = "25" height = "25" id = "treetypebtn" />'+
             '</button>',
+
            
-  classes : 'btn-group-vertical btn-group-sm',
+  classes : 'btn-container',
   style   :
   {
-      margin: '10px',
-      padding: 20,
-      cursor: 'pointer',
+
   },
   datas   :
   {
@@ -567,27 +573,154 @@ var legendControl = L.control.custom({
 });
 
 
+function updateLegend(id) {
+	document.getElementById("test123").innerHTML = '';
+
+	switch(id) {
+		case "simple": {
+		document.getElementById("test123").innerHTML += "Tree " + (" <img src= assets/greencircle.png" + " height = 20"  + " width = 20" + " /><br>");
+		break;
+		}
+		
+		case "treeheightbtn": {
+			var grades = ["No Data","10-20 ft.", "20-30 ft.", "30-40 ft.", "40-50 ft.", "> 50 ft."],
+			labels = ["assets/nodata.png", "assets/greencircle.png","assets/greencircle.png", "assets/greencircle.png", "assets/greencircle.png", "assets/greencircle.png"],
+			sizes = ["10","10", "20", "30", "40","50"];
+			// loop through our density intervals and generate a label with a colored square for each interval
+			for (var i = 0; i < grades.length; i++) {
+			  document.getElementById("test123").innerHTML +=
+				  grades[i] + (" <img src= "+ labels[i] + " height = " + sizes[i] + " width = " + sizes[i] + " /><br>");
+		  }
+		  break;
+	}
+		case "treetypebtn": {
+			var grades = ["No Data","Deciduous", "Evergreen", "Palm"],
+			labels = ["assets/nodata.png", "assets/deciduous.png","assets/evergreen.png", "assets/palm.png"];
+			// loop through our density intervals and generate a label with a colored square for each interval
+			for (var i = 0; i < grades.length; i++) {
+			  document.getElementById("test123").innerHTML +=
+				  grades[i] + (" <img src= "+ labels[i] + " height = 20 width = 20" + " /><br>");
+		  }
+		  break;
+	}
+	
+			case "treeformbtn": {
+			var grades = ["No Data","Decurrent", "Excurrent", "Feather"],
+			labels = ["assets/nodata.png","assets/deciduous.png","assets/evergreen.png", "assets/palm.png"];
+			// loop through our density intervals and generate a label with a colored square for each interval
+			for (var i = 0; i < grades.length; i++) {
+			  document.getElementById("test123").innerHTML +=
+				  grades[i] + (" <img src= "+ labels[i] + " height = 20 width = 20" + " /><br>");
+		  }
+		  break;
+	}
+
+}
+}
+
+function updatePopup(popuplayer,id) {
+	
+		     popuplayer.bindPopup(function (layer) {
+		switch(id) {
+			case "simple": {
+				return L.Util.template("<b>Common Name: {X_COMMONNA}</b><br>Botanical Name: {Botanical_}<br>Family: {FAMILY}<br>Park: {FACILITY}<br>", layer.feature.properties);
+			}
+			case "treeheightbtn": {
+				return L.Util.template("<b>Common Name: {X_COMMONNA}</b><br>Botanical Name: {Botanical_}<br>Family: {FAMILY}<br>Tree Height: {TREE_HEIGH}<br>Park: {FACILITY}<br>", layer.feature.properties);
+			}
+			case "treetypebtn": {
+				return L.Util.template("<b>Common Name: {X_COMMONNA}</b><br>Botanical Name: {Botanical_}<br>Family: {FAMILY}<br>Tree Type: {TREETYPE}<br>Park: {FACILITY}<br>", layer.feature.properties);
+			}
+			case "treeformbtn": {
+				return L.Util.template("<b>Common Name: {X_COMMONNA}</b><br>Botanical Name: {Botanical_}<br>Family: {FAMILY}<br>Tree Form: {TREEFORM}<br>Park: {FACILITY}<br>", layer.feature.properties);
+			}
+		}
+      });
+}
+
 function resymbolize(id) {
 switch(id) {
-  case "treeheightbtn": {
-          console.log(id);
-
-    parkTrees.eachFeature(function (layer) {  
-    if(layer.feature.properties.TREETYPE == 'Evergreen') {    
-    layer.setStyle({fillColor :'blue', color: 'blue'}) 
-    }
+	
+	
+	 case "simple": {
+		updatePopup(parkTrees,"simple");
+		updateLegend("simple");
+		parkTrees.eachFeature(function (layer) {  
+		layer.setStyle({fillColor :'#40EE95', color: '40EE95', radius: 5}) 
+    
   });
   break;
   }
   
-  
-      case "treetypebtn": {
-              console.log(id);
+  case "treeheightbtn": {
+		updatePopup(parkTrees,"treeheightbtn");
+	  	updateLegend("treeheightbtn");
+		parkTrees.eachFeature(function (layer) {
+		layer.setStyle({    color: '#40EE95',
+        fillColor: '#40EE95',});
+		if(layer.feature.properties.TREE_HEIGH == '10-20 ft. Small') {    
+			layer.setStyle({radius : 4});
+		}
+		else if (layer.feature.properties.TREE_HEIGH == '20-30 ft. Small') {
+			layer.setStyle({radius : 7});
+		}
+		else if (layer.feature.properties.TREE_HEIGH == '30-40 ft. Medium') {
+			layer.setStyle({radius : 10});
+		}
+		else if (layer.feature.properties.TREE_HEIGH == '40-50 ft. Medium') {
+			layer.setStyle({radius : 13});
+		}
+		else if (layer.feature.properties.TREE_HEIGH == '> 50 ft. Large') {
+			layer.setStyle({radius : 16});
+		}
+		else {
+				layer.setStyle({radius : 5, fillColor: "#9DBBAC", color: "#9DBBAC" });
+		
+		}
 
-    parkTrees.eachFeature(function (layer) {  
-    if(layer.feature.properties.TREETYPE == 'Palm') {    
-    layer.setStyle({fillColor :'pink', color: 'pink'}) 
-    }
+		
+		
+	});
+  break;
+  }
+      case "treetypebtn": {
+		updatePopup(parkTrees,"treetypebtn");
+		updateLegend("treetypebtn");
+		parkTrees.eachFeature(function (layer) {  
+		if(layer.feature.properties.TREETYPE == 'Palm') {    
+			layer.setStyle({radius: 5, fillColor :'#A67B51', color: '#A67B51'}) 
+		}
+		else if(layer.feature.properties.TREETYPE == 'Deciduous') {    
+			layer.setStyle({radius: 5, fillColor :'#f0a900', color: '#f0a900'}) 
+		}
+		else if(layer.feature.properties.TREETYPE == 'Evergreen') {    
+			layer.setStyle({radius: 5, fillColor :'#0CAE5B', color: '#0CAE5B'}) 
+		}
+		else {    
+			layer.setStyle({radius : 5, fillColor: "#9DBBAC", color: "#9DBBAC" });
+		}
+
+  });
+  break;
+  }
+  
+      case "treeformbtn": {
+		updatePopup(parkTrees,"treeformbtn");
+		updateLegend("treeformbtn");
+		parkTrees.eachFeature(function (layer) {  
+		if(layer.feature.properties.TREEFORM == 'Decurrent') {    
+			layer.setStyle({radius: 5, fillColor :'#A67B51', color: '#A67B51'}) 
+		}
+		else if(layer.feature.properties.TREEFORM == 'Excurrent') {    
+			layer.setStyle({radius: 5, fillColor :'#f0a900', color: '#f0a900'}) 
+		}
+		else if(layer.feature.properties.TREEFORM == 'Feather') {    
+			layer.setStyle({radius: 5, fillColor :'#0CAE5B', color: '#0CAE5B'}) 
+		}
+		else {    
+			layer.setStyle({radius : 5, fillColor: "#9DBBAC", color: "#9DBBAC" });
+		}
+
   });
   break;
   }
@@ -612,26 +745,47 @@ function onSymbologyClicked(data) {
 if (data.srcElement.id == "treetypebtn") {
     $("#treeheightbtn").prop("disabled",false);
     $("#treetypebtn").prop("disabled",true);
-  resymbolize("treeheightbtn");
+	$("#simple").prop("disabled",false);
+	$("#treeformbtn").prop("disabled",false);
+
+
+  resymbolize("treetypebtn");
+
+
+}
+
+else if (data.srcElement.id == "simple") {
+      resymbolize("simple");
+	$("#simple").prop("disabled",true);
+    $("#treeheightbtn").prop("disabled",false);
+    $("#treetypebtn").prop("disabled",false);
+	$("#treeformbtn").prop("disabled",false);
 
 
 }
 
 
-if (data.srcElement.id == "treeheightbtn") {
-      resymbolize("treetypebtn");
-
+else if (data.srcElement.id == "treeheightbtn") {
+      resymbolize("treeheightbtn");
+	$("#simple").prop("disabled",false);
     $("#treeheightbtn").prop("disabled",true);
     $("#treetypebtn").prop("disabled",false);
+	$("#treeformbtn").prop("disabled",false);
+}
 
+else if (data.srcElement.id == "treeformbtn") {
+      resymbolize("treeformbtn");
+	$("#simple").prop("disabled",false);
+    $("#treeheightbtn").prop("disabled",false);
+    $("#treetypebtn").prop("disabled",false);
+	$("#treeformbtn").prop("disabled",true);
 }
 }
 
 function createLayerControl() {
 
-
-legendControl.addTo(map);
 legend.addTo(map);
+legendControl.addTo(map);
 
 }
 
