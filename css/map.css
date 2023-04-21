@@ -206,10 +206,49 @@ body {
 	top: 7;
 	cursor: pointer;
 }
+#container, #container2 {
+  width: 100%;
+  height: 100%;
+  top: 0;
+  position: absolute;
+  z-index: 999;
+  display: none;
+  background-color: rgba(22,22,22,0.5); /* complimenting your modal colors */
+}
+#container:target, #containter2:target {
+  visibility: visible;
+  display: block;
+}
+.reveal-modal {
+  position: relative;
+  margin: 0 auto;
+  top: 25%;
+  bottom: 25%;
+  padding: 25;
+  border-radius: 5px;
+  background-color: white;
+  max-width: 500px;
+  height:500px;
+  overflow-y:auto;
 
+}
+  /* Remove the left: 50% */
+#closePopup, #closePopup2 {
+  border: none;
+  background: none;
+  cursor: pointer;
+  margin: 0;
+  padding: 5;
+  font-size: 25px;
+  font-weight: 600;  
+  position:absolute;
+  top:0;
+  right:0;
+}
 
-
-
+#imagepadding {
+  padding: 2;
+}
 
 .box {
 	background-color: black;
@@ -270,4 +309,8 @@ body {
 	color: black;
 	text-decoration: none;
 	font-size: 30px;
+}
+
+#infoParagraph {
+  line-height: 1.5;
 }

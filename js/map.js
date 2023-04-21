@@ -1,9 +1,20 @@
       $('#help').click(function(){ 
-	  $('#popup-box').prop("dispay","block");
-	  console.log("clicked");
+        document.getElementById("container").style.display = "block";
 	  })
      
+    $('#closePopup').click(function(){ 
+      document.getElementById("container").style.display = "none";
 
+  })
+
+  $('#info').click(function(){ 
+    document.getElementById("container2").style.display = "block";
+})
+ 
+$('#closePopup2').click(function(){ 
+  document.getElementById("container2").style.display = "none";
+
+})
 
 	 const map = L.map("map", {
         minZoom: 2,
@@ -35,7 +46,16 @@
 
 
       L.control.layers(basemapLayers, null, { collapsed: false, position: 'topright'}).addTo(map);
-
+      
+      var laBoundaries = L.esri
+      .featureLayer({
+        url:        "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/CityOfLA/FeatureServer/0",
+        fillColor: '#2ca25f',
+        color: 'black',
+        fillOpacity: 0.0,
+        stroke:true,
+        weight:3
+      });
       
                   var parkBoundaries = L.esri
         .featureLayer({
@@ -479,6 +499,7 @@ var RadioControl = L.Control.extend({
                   map.setView([34.02, -118.205], 10);
 					removeAllLayers();
 					$("#searchTitle").text("Los Angeles Tree Web Map");
+					map.removeLayer(laBoundaries);
 
 					var layerControlElement = document.getElementsByClassName('leaflet-control-layers')[0];
 					layerControlElement.getElementsByTagName('input')[2].click();
@@ -503,6 +524,7 @@ var RadioControl = L.Control.extend({
 					var layerControlElement = document.getElementsByClassName('leaflet-control-layers')[0];
 					layerControlElement.getElementsByTagName('input')[0].click();
 					//streetTrees.addTo(map);
+          laBoundaries.addTo(map);
 					$(tap).prop("disabled",false);
 					$(tas).prop("disabled",true);
 					showStreetButtons();

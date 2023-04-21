@@ -89,7 +89,48 @@
   <body>
     <div class = "header" id = "searchTitle"><p>Los Angeles Tree Web Map</div><input type="image" src = "assets/help.png" id = "help" /><input type="image" src = "assets/info.png" id = "info" /></p>
     <div id="map"></div>
+    <div id="container">
+      <div id="exampleModal" class="reveal-modal">
+        <button id = "closePopup">X</button>
 
+        <h3>Filter Buttons</h3>
+        <img src = "assets/ftap.png" width="125" height="35" id = "imagepadding"/><img src = "assets/ftas.png" width="125" height="35" id = "imagepadding"/>
+        <p>These filter button are located on the top-left corner and are used to seach between the Los Angeles park tree database or the Los Angeles street tree database.</p>
+
+        <h3>Basemap Options</h3>
+        <img src = "assets/basemaps.png"  />
+        <p>Explore the various basemaps located on the top-right corner and find the one that is most suited for your needs.</p>
+      
+
+        <h3>Symbology Buttons</h3>
+        <img src = "assets/simpleb.png" width="105" height="35" id = "imagepadding" /><img src = "assets/treeheight.png" width="105" height="35" id = "imagepadding" /><img src = "assets/treeformb.png" width="105" height="35" id = "imagepadding" /><img src = "assets/treeheight.png" width="105" height="35" id = "imagepadding"  />
+
+
+        <p>The symbology buttons are located on the bottom-left corner and are used to change the map symbols based on the properties.</p>
+
+        
+        <h3>Legend</h3>
+        <img src = "assets/legend.png"/>
+        <p>The legend is located on the bottom-right corner and updates based on what symbology button is active. </p>
+
+      
+        <h3>Chart</h3>
+        <img src = "assets/evergreen.png" width="25" height="25" />
+        <p>The chart displays the current zoom data in bar graph format for easy visualization comparisons.</p>
+
+      </div>
+      </div>
+
+      <div id="container2">
+        <div id="exampleModal" class="reveal-modal">
+          <button id = "closePopup2">X</button>
+  
+          <h5 id = "infoParagraph">The Los Angeles Tree Web Map is a mapping application created by Alejandro Gomez for the University of Wisconsin-Madison GIS Development Master's Program Practicum project. This application is used to explore the City of Los Angeles tree database at public parks and public street right-of-way (ROW). The map was produced using Esri Leaflet API in combination with Bootstrap, JQuery, and AJAX.<br><br> All data displayed on the map is from the <a target= 'blank' rel= 'noopener noreferrer' href = "https://geohub.lacity.org/">Los Angeles Geohub </a><br><br>The source code can be found on my <a target= 'blank' rel= 'noopener noreferrer' href = "https://github.com/AGOMEZ28/LATreeWebMap">Github</a><br><br>For more of my mapping projects see my <a target= 'blank' rel= 'noopener noreferrer' href = "https://agomez28.github.io/Alex-Gomez-Portfolio/about.html">online portfolio </a><br><br>Email me <a href="mailto:agomez28@wisc.com">agomez28@wisc.edu</a> if you have any questions or comments.</h5>
+  
+        </div>
+        </div>
+
+  </div>
   </body>
 <script src = "js/map.js"></script>
 </html>
