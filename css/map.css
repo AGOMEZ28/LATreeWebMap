@@ -2,6 +2,14 @@ body {
   margin: 0;
   padding: 0;
 }
+
+
+p {
+  font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+} 
+
+
+
 #map {
   position: absolute;
   top: 40px;
@@ -186,6 +194,7 @@ body {
 
 .legend.leaflet-control {
 	position: relative;
+  opacity: 0.85;
 }
 
 #info {
@@ -228,6 +237,7 @@ body {
   border-radius: 5px;
   background-color: white;
   max-width: 500px;
+  z-index: 999;
   height:500px;
   overflow-y:auto;
 
@@ -244,6 +254,15 @@ body {
   position:absolute;
   top:0;
   right:0;
+}
+
+
+
+#closeButton, #closeButton2 {
+
+  margin:0 auto;
+  display:block;
+
 }
 
 #imagepadding {
@@ -312,5 +331,5 @@ body {
 }
 
 #infoParagraph {
-  line-height: 1.5;
+  line-height: 1.8;
 }

@@ -16,32 +16,37 @@ $('#closePopup2').click(function(){
 
 })
 
+$('#closeButton').click(function(){ 
+  document.getElementById("container").style.display = "none";
+
+})
+
+$('#closeButton2').click(function(){ 
+  document.getElementById("container2").style.display = "none";
+
+})
+
 	 const map = L.map("map", {
         minZoom: 2,
 		attributionControl: false,
-		maxZoom: 20
+		maxZoom: 20,
+    zoomControl: false
       })
 
       map.setView([34.02, -118.205], 10);
+      var zoomHome = L.Control.zoomHome();
+      zoomHome.addTo(map);
 
       const apiKey = "AAPKb752a08ab5404f8581977fcefc50129f72b2k0kO6jQmNu8VXUEyo-SF1nMWS-8s2EED6s4v9aACHjJZLNzfDok6GvkcEC5M";
 
       const basemapLayers = {
 
-        //Streets: L.esri.Vector.vectorBasemapLayer("ArcGIS:Streets", { apiKey: apiKey }),
-
         Navigation: L.esri.Vector.vectorBasemapLayer("ArcGIS:Navigation", { apiKey: apiKey }),
         Topographic: L.esri.Vector.vectorBasemapLayer("ArcGIS:Topographic", { apiKey: apiKey }),
-        "Light Gray": L.esri.Vector.vectorBasemapLayer("ArcGIS:LightGray", { apiKey: apiKey }).addTo(map),
-        "Dark gray": L.esri.Vector.vectorBasemapLayer("ArcGIS:DarkGray", { apiKey: apiKey }),
-        //"Streets Relief": L.esri.Vector.vectorBasemapLayer("ArcGIS:StreetsRelief", { apiKey: apiKey }),
+        "Light Gray": L.esri.Vector.vectorBasemapLayer("ArcGIS:LightGray", { apiKey: apiKey }),
+        "Dark gray": L.esri.Vector.vectorBasemapLayer("ArcGIS:DarkGray", { apiKey: apiKey }).addTo(map),
         Imagery: L.esri.Vector.vectorBasemapLayer("ArcGIS:Imagery", { apiKey: apiKey }),
-        //ChartedTerritory: L.esri.Vector.vectorBasemapLayer("ArcGIS:ChartedTerritory", { apiKey: apiKey }),
-        //ColoredPencil: L.esri.Vector.vectorBasemapLayer("ArcGIS:ColoredPencil", { apiKey: apiKey }),
-        //Nova: L.esri.Vector.vectorBasemapLayer("ArcGIS:Nova", { apiKey: apiKey }),
-        //Midcentury: L.esri.Vector.vectorBasemapLayer("ArcGIS:Midcentury", { apiKey: apiKey }),
-        //OSM: L.esri.Vector.vectorBasemapLayer("OSM:Standard", { apiKey: apiKey }),
-        //"OSM:Streets": L.esri.Vector.vectorBasemapLayer("OSM:Streets", { apiKey: apiKey })
+
       };
 
 
@@ -59,7 +64,7 @@ $('#closePopup2').click(function(){
       
                   var parkBoundaries = L.esri
         .featureLayer({
-          url:        "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/Los_Angeles_Recreation_and_Parks_Boundaries/FeatureServer/0",
+          url:        "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/LAParkBounds/FeatureServer/0",
           fillColor: '#2ca25f',
           color: '#2ca25f',
           fillOpacity: 0.6,
@@ -68,75 +73,28 @@ $('#closePopup2').click(function(){
       
       parkBoundaries.bindPopup(function (layer) {
 
-        return L.Util.template("<b>{Name}</b><br>{Address}</br>", layer.feature.properties);
+        return L.Util.template("<b>{FACILITY}</b><br>{Address}</br>", layer.feature.properties);
 
       });
 	  
      
-	  
-
-      // var parkLabels = L.esri
-      // .featureLayer({
-        // url:        "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/Los_Angeles_Recreation_and_Parks_Boundaries/FeatureServer/0",
-        // fillColor: '#2ca25f',
-        // color: '#2ca25f',
-        // stroke:false
-      // }).addTo(map);
-
-      // const labels = {};
-
-      // parkLabels.on("createfeature", function (e) {
-        // const id = e.feature.id;
-        // const feature = parkLabels.getFeature(id);
-        // const center = feature.getBounds().getCenter();
-        // const label = L.marker(center, {
-          // icon: L.divIcon({
-            // iconSize: null,
-            // className: "label",
-            // html: "<div>" + e.feature.properties.Name + "</div>"
-          // })
-        // });
-        // labels[id] = label;
-      // });
-      // var show_label_zoom = 15; // zoom level threshold for showing/hiding labels
-      // function show_hide_labels() {
-        // var cur_zoom = map.getZoom();
-        // if(cur_zoom < show_label_zoom && map.hasLayer(parkLabels)) {       
-            // map.removeLayer(parkLabels);            
-        // } else if(!map.hasLayer(parkLabels) && cur_zoom >= show_label_zoom) {            
-          // map.addLayer(parkLabels);                 
-        // }
-    // }
-    // map.on('zoomend', show_hide_labels);
-    // show_hide_labels();
-
-    // parkLabels.on("addfeature", function (e) {
-        // const label = labels[e.feature.id];
-        // if (label) {
-          // label.addTo(map);
-        // }
-      // });
-
-      // parkLabels.on("removefeature", function (e) {
-        // const label = labels[e.feature.id];
-        // if (label) {
-          // map.removeLayer(label);
-        // }
-      // });
-
+	
       
             var streetTrees = L.esri.Cluster
         .featureLayer({
           url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/FilteredStreetTrees/FeatureServer/0",
 		  spiderfyOnMaxZoom: false,
 		  removeOutsideVisibleBounds: true,
-        disableClusteringAtZoom: 18,
+        disableClusteringAtZoom: 17,
                 pointToLayer: function (feature, latlng) {
           var myStyle = {
-    color: '#0CAE5B',
-        fillColor: '#0CAE5B',
-        fillOpacity: 0.5,
-        radius: 5
+            color: '#0CAE5B',
+            fillColor: '#0CAE5B',
+            fillOpacity: 1,
+            stroke: true,
+            weight:1,
+            color:'white',
+            radius: 5
     };
           return new L.CircleMarker(latlng,myStyle);
     
@@ -148,16 +106,16 @@ $('#closePopup2').click(function(){
 	  
 	  	streetTrees.bindPopup(function (layer) {
 
-        return L.Util.template("<b>{COMMON_N}</b><br>Botanical Name: {BOTANICAL}<br>Street: {STREET}<br>", layer.feature.properties);
+        return L.Util.template("<b>{COMMON}</b><br>Botanical Name: {BOTANICAL}<br>Family: {FAMILY}<br>Genus: {GENUS}<br>Address: {Street_}<br>", layer.feature.properties);
 
       });
 	  
 	    const parkTrees = L.esri.Cluster
         .featureLayer({
-          url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/Trees_(Recreation_and_Parks_Department)/FeatureServer/0",
+          url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/ParkTreesFinal/FeatureServer/0",
 		  spiderfyOnMaxZoom: false,
 		  removeOutsideVisibleBounds: true,
-        disableClusteringAtZoom: 18,
+        disableClusteringAtZoom: 17,
 		
 /* 		 iconCreateFunction: function (cluster) {
           // get the number of items in the cluster
@@ -184,7 +142,10 @@ $('#closePopup2').click(function(){
           var myStyle = {
     color: '#0CAE5B',
         fillColor: '#0CAE5B',
-        fillOpacity: 0.85,
+        fillOpacity: 1,
+        stroke: true,
+        weight:1,
+        color:'white',
         radius: 5
     };
           return new L.CircleMarker(latlng,myStyle);
@@ -192,17 +153,17 @@ $('#closePopup2').click(function(){
             },
     
 		
+            where: "1 = 0"
+
 		
 		
 		
-		
-		  where: "1 = 0"
         });
       parkTrees.addTo(map);
 	  
 	     parkTrees.bindPopup(function (layer) {
 
-        return L.Util.template("<b>{X_COMMONNA}</b><br>Botanical Name: {Botanical_}<br>Family: {FAMILY}<br>Park: {FACILITY}<br>", layer.feature.properties);
+        return L.Util.template("<b>{COMMON}</b><br>Botanical Name: {Botanical_}<br>Family: {FAMILY}<br>Genus: {GENUS}<br>Park: {FACILITY_1}<br>", layer.feature.properties);
 
       });
 
@@ -241,11 +202,11 @@ $('#closePopup2').click(function(){
 
      var streetTreeSearchLayer = L.esri.Geocoding.featureLayerProvider({
         url:
-          "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/LAStreetTrees/FeatureServer/0",
-        searchFields: ["COMMON_N"],
+          "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/FilteredStreetTrees/FeatureServer/0",
+        searchFields: ["COMMON"],
         label: "Tree Names",
         formatSuggestion: function (feature) {
-          return feature.properties.COMMON_N;
+          return feature.properties.COMMON;
         }
       });
 	  
@@ -253,32 +214,32 @@ $('#closePopup2').click(function(){
 
       var streetTreeSearchLayer2 = L.esri.Geocoding.featureLayerProvider({
         url:
-          "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/LAStreetTrees/FeatureServer/0",
-        searchFields: ["STREET"],
+          "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/FilteredStreetTrees/FeatureServer/0",
+        searchFields: ["Street_2"],
         label: "Street Names",
         formatSuggestion: function (feature) {
-          return feature.properties.STREET;
+          return feature.properties.Street_2;
         }
       });
 
 
      var parkSearchLayer = L.esri.Geocoding.featureLayerProvider({
         url:
-          "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/Los_Angeles_Recreation_and_Parks_Boundaries/FeatureServer/0",
-        searchFields: ["Name"],
+          "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/ParkTreesFinal/FeatureServer/0",
+        searchFields: ["FACILITY_1"],
         label: "Park Names",
         formatSuggestion: function (feature) {
-          return feature.properties.Name;
+          return feature.properties.FACILITY_1;
         }
       });
 	  
 	var treeSearchLayer = L.esri.Geocoding.featureLayerProvider({
         url:
-          "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/Trees_(Recreation_and_Parks_Department)/FeatureServer/0",
-        searchFields: ["X_COMMONNA"],
+          "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/ParkTreesFinal/FeatureServer/0",
+        searchFields: ["COMMON"],
         label: "Tree Names (Common)",
         formatSuggestion: function (feature) {
-          return feature.properties.X_COMMONNA;
+          return feature.properties.COMMON;
         }
       });
 
@@ -308,7 +269,7 @@ var RadioControl = L.Control.extend({
 
 function removeAllLayers() {
 	try {
-		parkTrees.setWhere("where 1 = 0").addTo(map);
+    parkTrees.setWhere("where 1 = 0").addTo(map);
 		streetTrees.setWhere("where 1 = 0").addTo(map);
 
 		//map.removeLayer(parkTrees);
@@ -320,10 +281,10 @@ function removeAllLayers() {
 
 }
 
-var x = addSearchControl("Search Park",parkSearchLayer,parkTrees,"FACILITY = ",false);
-var y = addSearchControl("Search Park Tree",treeSearchLayer,parkTrees,"X_COMMONNA = ",false);
-var z = addSearchControl("Search Street Tree",streetTreeSearchLayer,streetTrees,"COMMON_N = ",true);
-var v = addSearchControl("Search Street",streetTreeSearchLayer2,streetTrees,"STREET = ",true);
+var x = addSearchControl("Search Park",parkSearchLayer,parkTrees,"FACILITY_1 = ",false);
+var y = addSearchControl("Search Park Tree",treeSearchLayer,parkTrees,"COMMON = ",false);
+var z = addSearchControl("Search Street Tree",streetTreeSearchLayer,streetTrees,"COMMON = ",true);
+var v = addSearchControl("Search Street",streetTreeSearchLayer2,streetTrees,"Street_2 = ",true);
 function hideParkButtons() {
 	$('button.btn.btn-primary').remove("#park");
 	$('button.btn.btn-primary').remove("#tree");
@@ -502,10 +463,7 @@ var RadioControl = L.Control.extend({
 					map.removeLayer(laBoundaries);
 
 					var layerControlElement = document.getElementsByClassName('leaflet-control-layers')[0];
-					layerControlElement.getElementsByTagName('input')[2].click();
-					//parkTrees.addTo(map);
-					//parkTrees.setWhere("1 = 0");
-					//parkTrees.addTo(map);
+					layerControlElement.getElementsByTagName('input')[3].click();
 					console.log(parkTrees.getWhere());
 					parkBoundaries.addTo(map);
 					$(tap).prop("disabled",true);
@@ -565,6 +523,9 @@ function addSearchControl(placeholder,provider,source,where,isStreetData) {
          createLayerControl(2);
 		}
 				}
+        else {
+          console.log("no results");
+        }
       });
 	  return searchControl;
 }
@@ -638,6 +599,9 @@ var legendControl2 = L.control.custom({
   content : '<button type="button" class="btn btn-primary" disabled = "true" id = "simple">Simple'+
             '    <img src="assets/simple.png" alt="Simple Icon" width = "25" height = "25" id = "simple" />'+
             '</button>'+
+            '<button type="button" class="btn btn-primary" id = "treelocationbtn">Tree Design'+
+            '    <img src="assets/treewell.png" alt="Tree Icon" width = "25" height = "25" id = "treelocationbtn" />'+
+            '</button>'+
            '<button type="button" class="btn btn-primary" id = "treeformbtn">Tree Form'+
             '    <img src="assets/treeform.png" alt="Tree Icon" width = "25" height = "25" id = "treeformbtn" />'+
             '</button>'+
@@ -681,15 +645,13 @@ function updateLegend(id) {
 
 	switch(id) {
 		case "simple": {
-		var x = 0;
-
-		document.getElementById("test123").innerHTML += "Trees " + (" <img src= assets/greencircle.png" + " height = 20"  + " width = 20" + " /><br>");
+		document.getElementById("test123").innerHTML += "Trees " + (" <img src= assets/basictree.png" + " height = 20"  + " width = 20" + " /><br>");
 		break;
 		}
 		
 		case "treeheightbtn": {
-			var grades = ["No Data","10-20 ft.", "20-30 ft.", "30-40 ft.", "40-50 ft.", "> 50 ft."],
-			labels = ["assets/nodata.png", "assets/greencircle.png","assets/greencircle.png", "assets/greencircle.png", "assets/greencircle.png", "assets/greencircle.png"],
+			var grades = ["Other/No Data","10-20 ft.", "20-30 ft.", "30-40 ft.", "40-50 ft.", "> 50 ft."],
+			labels = ["assets/nodata.png", "assets/basictree.png","assets/basictree.png", "assets/basictree.png", "assets/basictree.png", "assets/basictree.png"],
 			sizes = ["10","10", "20", "30", "40","50"];
 			// loop through our density intervals and generate a label with a colored square for each interval
 			for (var i = 0; i < grades.length; i++) {
@@ -698,9 +660,20 @@ function updateLegend(id) {
 		  }
 		  break;
 	}
+  case "treelocationbtn": {
+    var grades = ["Other/No Data","Tree", "Tree in Tree Well", "Tree Well Only"],
+    labels = ["assets/nodata.png", "assets/basictree.png","assets/treeintreewell.png", "assets/gymnosperm.png"];
+    // loop through our density intervals and generate a label with a colored square for each interval
+    for (var i = 0; i < grades.length; i++) {
+      document.getElementById("test123").innerHTML +=
+        grades[i] + (" <img src= "+ labels[i] + " height =  20 width = 20"+ " /><br>");
+    }
+    break;
+}
+
 		case "treetypebtn": {
-			var grades = ["No Data","Deciduous", "Evergreen", "Palm"],
-			labels = ["assets/nodata.png", "assets/deciduous.png","assets/evergreen.png", "assets/palm.png"];
+			var grades = ["Other/No Data","Deciduous", "Evergreen","Gymnosperm","Palm"],
+			labels = ["assets/nodata.png", "assets/deciduous.png","assets/evergreen.png","assets/gymnosperm.png", "assets/palm.png"];
 			// loop through our density intervals and generate a label with a colored square for each interval
 			for (var i = 0; i < grades.length; i++) {
 			  document.getElementById("test123").innerHTML +=
@@ -710,8 +683,8 @@ function updateLegend(id) {
 	}
 	
 			case "treeformbtn": {
-			var grades = ["No Data","Decurrent", "Excurrent", "Feather"],
-			labels = ["assets/nodata.png","assets/deciduous.png","assets/evergreen.png", "assets/palm.png"];
+			var grades = ["Other/No Data","Decurrent", "Excurrent"],
+			labels = ["assets/nodata.png","assets/basictree.png","assets/palm.png"];
 			// loop through our density intervals and generate a label with a colored square for each interval
 			for (var i = 0; i < grades.length; i++) {
 			  document.getElementById("test123").innerHTML +=
@@ -729,32 +702,32 @@ function updatePopup(popuplayer,id) {
 		if (popuplayer == parkTrees) {
 			switch(id) {
 				case "simple": {
-					return L.Util.template("<b>{X_COMMONNA}</b><br>Botanical Name: {Botanical_}<br>Family: {FAMILY}<br>Park: {FACILITY}<br>", layer.feature.properties);
+					return L.Util.template("<b>{COMMON}</b><br>Botanical Name: {Botanical_}<br>Family: {FAMILY}<br>Genus: {GENUS}<br>Park: {FACILITY_1}<br>", layer.feature.properties);
 				}
 				case "treeheightbtn": {
-					return L.Util.template("<b>{X_COMMONNA}</b><br>Botanical Name: {Botanical_}<br>Family: {FAMILY}<br>Tree Height: {TREE_HEIGH}<br>Park: {FACILITY}<br>", layer.feature.properties);
+					return L.Util.template("<b>{COMMON}</b><br>Botanical Name: {Botanical_}<br>Family: {FAMILY}<br>Genus: {GENUS}<br>Tree Height: {TREE_HEIGH}<br>Park: {FACILITY}<br>", layer.feature.properties);
 				}
 				case "treetypebtn": {
-					return L.Util.template("<b>{X_COMMONNA}</b><br>Botanical Name: {Botanical_}<br>Family: {FAMILY}<br>Tree Type: {TREETYPE}<br>Park: {FACILITY}<br>", layer.feature.properties);
+					return L.Util.template("<b>{COMMON}</b><br>Botanical Name: {Botanical_}<br>Family: {FAMILY}<br>Genus: {GENUS}<br>Tree Type: {TREETYPE}<br>Park: {FACILITY}<br>", layer.feature.properties);
 				}
 				case "treeformbtn": {
-					return L.Util.template("<b>{X_COMMONNA}</b><br>Botanical Name: {Botanical_}<br>Family: {FAMILY}<br>Tree Form: {TREEFORM}<br>Park: {FACILITY}<br>", layer.feature.properties);
+					return L.Util.template("<b>{COMMON}</b><br>Botanical Name: {Botanical_}<br>Family: {FAMILY}<br>Genus: {GENUS}<br>Tree Form: {TREEFORM}<br>Park: {FACILITY}<br>", layer.feature.properties);
 				}
 			}
 		}
 		else if (popuplayer == streetTrees) {
 			switch(id) {
 				case "simple": {
-					return L.Util.template("<b>{X_COMMONNA}</b><br>Botanical Name: {Botanical_}<br>Family: {FAMILY}<br>Street: {STREET}<br>", layer.feature.properties);
+					return L.Util.template("<b>{COMMON}</b><br>Botanical Name: {Botanical_}<br>Family: {FAMILY}<br>Genus: {GENUS}<br>Address: {Street_}<br>", layer.feature.properties);
 				}
-				case "treedesc": {
-					return L.Util.template("<b>{X_COMMONNA}</b><br>Botanical Name: {Botanical_}<br>Family: {FAMILY}<br>Tree Height: {TREE_HEIGH}<br>Street: {STREET}<br>", layer.feature.properties);
+				case "treelocationbtn": {
+					return L.Util.template("<b>{COMMON}</b><br>Botanical Name: {Botanical_}<br>Family: {FAMILY}<br>Genus: {GENUS}<br>Tree Design: {Type_Descr}<br>Address: {Street_}<br>", layer.feature.properties);
 				}
 				case "treetypebtn": {
-					return L.Util.template("<b>{X_COMMONNA}</b><br>Botanical Name: {Botanical_}<br>Family: {FAMILY}<br>Tree Type: {TREETYPE}<br>Street: {STREET}<br>", layer.feature.properties);
+					return L.Util.template("<b>{COMMON}</b><br>Botanical Name: {Botanical_}<br>Family: {FAMILY}<br>Genus: {GENUS}<br>Tree Type: {TREETYPE}<br>Address: {Street_}<br>", layer.feature.properties);
 				}
 				case "treeformbtn": {
-					return L.Util.template("<b>{X_COMMONNA}</b><br>Botanical Name: {Botanical_}<br>Family: {FAMILY}<br>Tree Form: {TREEFORM}<br>Street: {STREET}<br>", layer.feature.properties);
+					return L.Util.template("<b>{COMMON}</b><br>Botanical Name: {Botanical_}<br>Family: {FAMILY}<br>Genus: {GENUS}<br>Tree Form: {TREEFORM}<br>Address: {Street_}<br>", layer.feature.properties);
 				}
 			}			
 		}
@@ -763,7 +736,9 @@ function updatePopup(popuplayer,id) {
 
 function setStyle(feat) {
 			feat.eachFeature(function (layer) {  
-		layer.setStyle({fillColor :'#0CAE5B', color: '#0CAE5B', radius: 5}) 
+		layer.setStyle({fillColor :'#0CAE5B', radius: 5, stroke: true,
+    weight:1,
+    color:'white',}) 
     
   });
 	
@@ -788,8 +763,10 @@ switch(id) {
 
 	  	updateLegend("treeheightbtn");
 		parkTrees.eachFeature(function (layer) {
-		layer.setStyle({    color: '#0CAE5B',
-        fillColor: '#0CAE5B',});
+		layer.setStyle({ 
+        fillColor: '#0CAE5B',        stroke: true,
+        weight:1,
+        color:'white',});
 		if(layer.feature.properties.TREE_HEIGH == '10-20 ft. Small') {    
 			
 			layer.setStyle({radius : 4});
@@ -807,7 +784,9 @@ switch(id) {
 			layer.setStyle({radius : 16});
 		}
 		else {
-				layer.setStyle({radius : 5, fillColor: "#9DBBAC", color: "#9DBBAC" });
+				layer.setStyle({radius : 5, fillColor: "#9DBBAC",         stroke: true,
+        weight:1,
+        color:'white', });
 		
 		}
 
@@ -818,6 +797,35 @@ switch(id) {
 
   break;
   }
+
+  case "treelocationbtn": {
+		updatePopup(streetTrees,"treelocationbtn");
+
+	  	updateLegend("treelocationbtn");
+		streetTrees.eachFeature(function (layer) {
+		layer.setStyle({    color: 'white', radius: 5,
+        fillColor: '#0CAE5B',});
+		if(layer.feature.properties.Type_Descr == 'Tree') {    
+			
+			layer.setStyle({fillColor : '#0CAE5B', color: 'white', stroke: true, weight: 1, radius: 5});
+		}
+		else if (layer.feature.properties.Type_Descr == 'Tree in Tree Well') {
+			layer.setStyle({fillColor : '#bddd97', color: 'white', stroke: true, weight: 1, radius: 5});
+		}
+		else if (layer.feature.properties.Type_Descr == 'Tree Well Only') {
+			layer.setStyle({fillColor: '#30694B', color: 'white', stroke: true, weight: 1, radius: 5});
+		}
+		else {
+				layer.setStyle({fillColor: "#9DBBAC", color: "#9DBBAC" });
+		
+		}
+
+		
+		
+	});
+  break;
+}
+
       case "treetypebtn": {
 		updatePopup(parkTrees,"treetypebtn");
 		updatePopup(streetTrees,"treetypebtn");
@@ -825,31 +833,37 @@ switch(id) {
 		updateLegend("treetypebtn");
 		parkTrees.eachFeature(function (layer) {  
 		if(layer.feature.properties.TREETYPE == 'Palm') {    
-			layer.setStyle({radius: 5, fillColor :'#A67B51', color: '#A67B51'}) 
+			layer.setStyle({radius: 5, fillColor :'#A67B51', color: 'white', stroke: true, weight: 1}) 
 		}
 		else if(layer.feature.properties.TREETYPE == 'Deciduous') {    
-			layer.setStyle({radius: 5, fillColor :'#f0a900', color: '#f0a900'}) 
+			layer.setStyle({radius: 5, fillColor :'#f0a900', color: 'white', stroke: true, weight: 1}) 
 		}
 		else if(layer.feature.properties.TREETYPE == 'Evergreen') {    
-			layer.setStyle({radius: 5, fillColor :'#0CAE5B', color: '#0CAE5B'}) 
+			layer.setStyle({radius: 5, fillColor :'#0CAE5B', color: 'white', stroke: true, weight: 1}) 
+		}
+    else if(layer.feature.properties.TREETYPE == 'Gymnosperm') {    
+			layer.setStyle({radius: 5, fillColor :'#30694B', color: 'white', stroke: true, weight: 1}) 
 		}
 		else {    
-			layer.setStyle({radius : 5, fillColor: "#9DBBAC", color: "#9DBBAC" });
+			layer.setStyle({radius : 5, fillColor: "#9DBBAC", color: 'white', stroke: true, weight: 1});
 		}
 
   });
   		streetTrees.eachFeature(function (layer) {  
 		if(layer.feature.properties.TREETYPE == 'Palm') {    
-			layer.setStyle({radius: 5, fillColor :'#A67B51', color: '#A67B51'}) 
+			layer.setStyle({radius: 5, fillColor :'#A67B51', color: 'white', stroke: true, weight: 1}) 
 		}
 		else if(layer.feature.properties.TREETYPE == 'Deciduous') {    
-			layer.setStyle({radius: 5, fillColor :'#f0a900', color: '#f0a900'}) 
+			layer.setStyle({radius: 5, fillColor :'#f0a900', color: 'white', stroke: true, weight: 1}) 
 		}
 		else if(layer.feature.properties.TREETYPE == 'Evergreen') {    
-			layer.setStyle({radius: 5, fillColor :'#0CAE5B', color: '#0CAE5B'}) 
+			layer.setStyle({radius: 5, fillColor :'#0CAE5B', color: 'white', stroke: true, weight: 1}) 
+		}
+    else if(layer.feature.properties.TREETYPE == 'Gymnosperm') {    
+			layer.setStyle({radius: 5, fillColor :'#30694B', color: 'white', stroke: true, weight: 1}) 
 		}
 		else {    
-			layer.setStyle({radius : 5, fillColor: "#9DBBAC", color: "#9DBBAC" });
+			layer.setStyle({radius : 5, fillColor: "#9DBBAC", color: 'white', stroke: true, weight: 1 });
 		}
 
   });
@@ -863,32 +877,25 @@ switch(id) {
 
 		updateLegend("treeformbtn");
 		parkTrees.eachFeature(function (layer) {  
-		if(layer.feature.properties.TREEFORM == 'Decurrent') {    
-			layer.setStyle({radius: 5, fillColor :'#A67B51', color: '#A67B51'}) 
-		}
-		else if(layer.feature.properties.TREEFORM == 'Excurrent') {    
-			layer.setStyle({radius: 5, fillColor :'#f0a900', color: '#f0a900'}) 
-		}
-		else if(layer.feature.properties.TREEFORM == 'Feather') {    
-			layer.setStyle({radius: 5, fillColor :'#0CAE5B', color: '#0CAE5B'}) 
-		}
-		else {    
-			layer.setStyle({radius : 5, fillColor: "#9DBBAC", color: "#9DBBAC" });
-		}
-
+      if(layer.feature.properties.TREEFORM == 'Decurrent') {    
+        layer.setStyle({radius: 5, fillColor :'#0CAE5B', color: 'white',stroke:true,weight:1,fillRule:'evenodd',lineCap:'square'}) 
+      }
+      else if(layer.feature.properties.TREEFORM == 'Excurrent') {    
+        layer.setStyle({radius: 5, fillColor :'#A67B51', color: 'white',stroke:true,weight:1,fillRule:'nonzero'}) 
+      }
+      else {    
+        layer.setStyle({radius : 5, fillColor: "#9DBBAC", color: "white",stroke:true,weight:1 });
+      }
   });
 		streetTrees.eachFeature(function (layer) {  
 		if(layer.feature.properties.TREEFORM == 'Decurrent') {    
-			layer.setStyle({radius: 5, fillColor :'#A67B51', color: '#A67B51'}) 
+			layer.setStyle({radius: 5, fillColor :'#0CAE5B', color: 'white',stroke:true,weight:1,fillRule:'evenodd',lineCap:'square'}) 
 		}
 		else if(layer.feature.properties.TREEFORM == 'Excurrent') {    
-			layer.setStyle({radius: 5, fillColor :'#f0a900', color: '#f0a900'}) 
-		}
-		else if(layer.feature.properties.TREEFORM == 'Feather') {    
-			layer.setStyle({radius: 5, fillColor :'#0CAE5B', color: '#0CAE5B'}) 
+			layer.setStyle({radius: 5, fillColor :'#A67B51', color: 'white',stroke:true,weight:1,fillRule:'nonzero'}) 
 		}
 		else {    
-			layer.setStyle({radius : 5, fillColor: "#9DBBAC", color: "#9DBBAC" });
+			layer.setStyle({radius : 5, fillColor: "#9DBBAC", color: "white",stroke:true,weight:1 });
 		}
 
   });
@@ -900,7 +907,7 @@ switch(id) {
     parkTrees.eachFeature(function (layer) {
       layer.setStyle({color: '#0CAE5B',
   fillColor: '#f03',
-  fillOpacity: 0.5,
+  fillOpacity: 0,
       radius: 5, })
 });
 break;
@@ -913,27 +920,40 @@ break;
 
 function onSymbologyClicked(data) {
 if (data.srcElement.id == "treetypebtn") {
+  resymbolize("treetypebtn");
     $("#treeheightbtn").prop("disabled",false);
     $("#treetypebtn").prop("disabled",true);
 	$("#simple").prop("disabled",false);
 	$("#treeformbtn").prop("disabled",false);
+  $("#treelocationbtn").prop("disabled",false);
 
 
-  resymbolize("treetypebtn");
+
+
+
+}
+
+else if (data.srcElement.id == "treelocationbtn") {
+      resymbolize("treelocationbtn");
+	$("#simple").prop("disabled",false);
+    $("#treeheightbtn").prop("disabled",false);
+    $("#treetypebtn").prop("disabled",false);
+	$("#treeformbtn").prop("disabled",false);
+  $("#treelocationbtn").prop("disabled",true);
+
 
 
 }
 
 else if (data.srcElement.id == "simple") {
-      resymbolize("simple");
-	$("#simple").prop("disabled",true);
-    $("#treeheightbtn").prop("disabled",false);
-    $("#treetypebtn").prop("disabled",false);
-	$("#treeformbtn").prop("disabled",false);
-
+  resymbolize("simple");
+$("#simple").prop("disabled",true);
+$("#treeheightbtn").prop("disabled",false);
+$("#treetypebtn").prop("disabled",false);
+$("#treeformbtn").prop("disabled",false);
+$("#treelocationbtn").prop("disabled",false);
 
 }
-
 
 else if (data.srcElement.id == "treeheightbtn") {
       resymbolize("treeheightbtn");
@@ -941,6 +961,8 @@ else if (data.srcElement.id == "treeheightbtn") {
     $("#treeheightbtn").prop("disabled",true);
     $("#treetypebtn").prop("disabled",false);
 	$("#treeformbtn").prop("disabled",false);
+  $("#treelocationbtn").prop("disabled",false);
+
 }
 
 else if (data.srcElement.id == "treeformbtn") {
@@ -949,6 +971,8 @@ else if (data.srcElement.id == "treeformbtn") {
     $("#treeheightbtn").prop("disabled",false);
     $("#treetypebtn").prop("disabled",false);
 	$("#treeformbtn").prop("disabled",true);
+  $("#treelocationbtn").prop("disabled",false);
+
 }
 }
 
@@ -957,10 +981,14 @@ function createLayerControl(id) {
 legend.addTo(map);
 if (id == 1) {
 	legendControl2.addTo(map);
+  console.log("simple resymbolize");
+  resymbolize("simple");
 	
 } 
 else if (id == 2) {
 	legendControl.addTo(map);
+  console.log("simple resymbolize");
+  resymbolize("simple");
 	
 }
 

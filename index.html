@@ -62,6 +62,9 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
 
+<link rel="stylesheet" href="css/leaflet.zoomhome.css"/>
+<script src="js/leaflet.zoomhome.min.js"></script>
+
  <!-- Load Leaflet MarkerCluster and Esri Leaflet Cluster from CDN -->
     <link rel="stylesheet" type="text/css"
       href="https://unpkg.com/leaflet.markercluster@1.5.0/dist/MarkerCluster.Default.css"
@@ -92,31 +95,50 @@
     <div id="container">
       <div id="exampleModal" class="reveal-modal">
         <button id = "closePopup">X</button>
-
         <h3>Filter Buttons</h3>
-        <img src = "assets/ftap.png" width="125" height="35" id = "imagepadding"/><img src = "assets/ftas.png" width="125" height="35" id = "imagepadding"/>
-        <p>These filter button are located on the top-left corner and are used to seach between the Los Angeles park tree database or the Los Angeles street tree database.</p>
+        <button type="button" class="btn btn-primary" title="Park Filter">Find Trees at Parks</button><button type="button" class="btn btn-primary" title="Street Filter">Find Trees at Streets</button>
 
+        <p>The filter buttons are located on the top-left corner and are used to seach between the Los Angeles park tree database or the Los Angeles street tree database</p>
+        <button type="button" class="btn btn-primary" title="Park Filter">Filter by Park</button><button type="button" class="btn btn-primary" title="Street Filter">Filter by Street</button>        <button type="button" class="btn btn-primary" title="Tree Filter">Filter by Tree</button>
+
+        <p>Another set of filter buttons are displayed to perform a search by street name, park name, or tree name</p>
+        <img src = "assets/search.png" id = "imagepadding"/><br>
+        A search bar used to type in a search
         <h3>Basemap Options</h3>
-        <img src = "assets/basemaps.png"  />
-        <p>Explore the various basemaps located on the top-right corner and find the one that is most suited for your needs.</p>
+        <img src = "assets/basemaps.png" id = "imagepadding" />
+        <p>Explore the various basemaps located on the top-right corner and select the one best suited for your needs</p>
       
 
         <h3>Symbology Buttons</h3>
-        <img src = "assets/simpleb.png" width="105" height="35" id = "imagepadding" /><img src = "assets/treeheight.png" width="105" height="35" id = "imagepadding" /><img src = "assets/treeformb.png" width="105" height="35" id = "imagepadding" /><img src = "assets/treeheight.png" width="105" height="35" id = "imagepadding"  />
-
-
-        <p>The symbology buttons are located on the bottom-left corner and are used to change the map symbols based on the properties.</p>
+        <button type="button" class="btn btn-primary">Simple
+          <img src="assets/simple.png" alt="Simple Button" width = "25" height = "25" padding = "2" />
+          </button>
+          <button type="button" class="btn btn-primary">Tree Height
+            <img src="assets/height.png" alt="Tree Height Button" width = "25" height = "25"  />
+            </button>
+            <button type="button" class="btn btn-primary">Tree Form
+              <img src="assets/treeform.png" alt="Tree Form Button" width = "25" height = "25"  />
+              </button>
+              <p></p>
+              <button type="button" class="btn btn-primary">Tree Design
+                <img src="assets/treewell.png" alt="Tree Design Button" width = "25" height = "25"  />
+                </button>
+                <button type="button" class="btn btn-primary">Tree Type
+                  <img src="assets/type.png" alt="Tree Type Button" width = "25" height = "25"   />
+                  </button>
+        <p>The symbology buttons are located on the bottom-left corner and are used to change the map symbols based on the properties</p>
 
         
         <h3>Legend</h3>
-        <img src = "assets/legend.png"/>
-        <p>The legend is located on the bottom-right corner and updates based on what symbology button is active. </p>
+        <img src = "assets/legend.png" id = "imagepadding" />
+        <p>The legend is located on the bottom-right corner and updates according to the symbology that is currently active</p>
 
       
-        <h3>Chart</h3>
-        <img src = "assets/evergreen.png" width="25" height="25" />
-        <p>The chart displays the current zoom data in bar graph format for easy visualization comparisons.</p>
+        <h3>Zoom/Home</h3>
+        <img src = "assets/zoomhome.png" id = "imagepadding" />
+        <p>The +/- buttons located on the top left are used to zoom in and out of the map</p><br>
+        <p>The home button is used to return to the default map extent</p>
+        <button type="button" class="btn btn-primary" title="Close" id = "closeButton">Close</button>      
 
       </div>
       </div>
@@ -125,8 +147,9 @@
         <div id="exampleModal" class="reveal-modal">
           <button id = "closePopup2">X</button>
   
-          <h5 id = "infoParagraph">The Los Angeles Tree Web Map is a mapping application created by Alejandro Gomez for the University of Wisconsin-Madison GIS Development Master's Program Practicum project. This application is used to explore the City of Los Angeles tree database at public parks and public street right-of-way (ROW). The map was produced using Esri Leaflet API in combination with Bootstrap, JQuery, and AJAX.<br><br> All data displayed on the map is from the <a target= 'blank' rel= 'noopener noreferrer' href = "https://geohub.lacity.org/">Los Angeles Geohub </a><br><br>The source code can be found on my <a target= 'blank' rel= 'noopener noreferrer' href = "https://github.com/AGOMEZ28/LATreeWebMap">Github</a><br><br>For more of my mapping projects see my <a target= 'blank' rel= 'noopener noreferrer' href = "https://agomez28.github.io/Alex-Gomez-Portfolio/about.html">online portfolio </a><br><br>Email me <a href="mailto:agomez28@wisc.com">agomez28@wisc.edu</a> if you have any questions or comments.</h5>
-  
+          <h5 id = "infoParagraph">The Los Angeles Tree Web Map is a mapping application created by Alejandro Gomez for the University of Wisconsin-Madison Online GIS Development Master's Program practicum project. This application is used to explore the City of Los Angeles tree database at public parks and public street right-of-way (ROW). The map was produced using Esri Leaflet API in combination with Bootstrap, JQuery, and AJAX.<br><br> All data displayed on the map is from the <a target= 'blank' rel= 'noopener noreferrer' href = "https://geohub.lacity.org/">Los Angeles Geohub </a><br><br>The source code for this project can be found on my <a target= 'blank' rel= 'noopener noreferrer' href = "https://github.com/AGOMEZ28/LATreeWebMap">Github</a><br><br>Visit my <a target= 'blank' rel= 'noopener noreferrer' href = "https://agomez28.github.io/Alex-Gomez-Portfolio/about.html">online portfolio </a>for more of my mapping projects<br><br>Email me <a href="mailto:agomez28@wisc.com">agomez28@wisc.edu</a> if you have any questions or comments</h5>
+          <button type="button" class="btn btn-primary" title="Close" id = "closeButton2">Close</button>      
+
         </div>
         </div>
 
